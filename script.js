@@ -42,25 +42,45 @@ function renderDOM(data){
         a.style.padding = "10px"
         pages.appendChild(a)
     }
-    document.body.insertBefore(pages, result)
+    document.getElementById("pages").innerHTML = ""
+    document.getElementById("pages").append(pages)
     // result.append(pages)
 
     arr.forEach(function(cryptocurrency){
-        var div = createCard(cryptocurrency)
+        var div = createCard(cryptocurrency);
         result.append(div)
     })
 
     function createCard(cryptocurrency){
-        var div = document.createElement("div")
-        div.setAttribute("class","card")
-        var img = document.createElement("img")
+        console.log(cryptocurrency);
+        var div = document.createElement("div");
+        div.setAttribute("class","card");
+        var img = document.createElement("img");
         img.setAttribute("src", cryptocurrency.image)
-        var name = document.createElement("div");
-        name.innerText = "Name: " + cryptocurrency.name
-        var id = document.createElement("div");
-        id.innerText = "Id: " + cryptocurrency.id
+        var details = document.createElement("div");
+        details.innerText =  cryptocurrency.name //+ "\n" + 
+                        // "Market Cap Rank: " + cryptocurrency.market_cap_rank + "\n" + 
+                        // "Volume: " + cryptocurrency.total_volume;
+        var price = document.createElement("div");
+        price.innerText = "$ "+Math.round(100*cryptocurrency.current_price)/100
+        var priceChange = document.createElement("div");
+        priceChange.innerText = "(" + Math.round(100*cryptocurrency.price_change_percentage_24h)/100 + "%)"
+        priceChange.style.fontSize = "13px"
+                
+        if (cryptocurrency.price_change_percentage_24h > 0) {
+            price.style.color = "green"
+            priceChange.style.color = "green"
+        }
+        else {
+            price.style.color = "red"
+            priceChange.style.color = "red"
+        }
+            
 
-        div.append(img,name,id);
+        
+        
+
+        div.append(img,details,price,priceChange);
         return div
 
     }

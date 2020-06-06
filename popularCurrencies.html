@@ -6,13 +6,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="popularCurrencies">Popular Currencies</button>
-    <label for="search">
-        <input type="text" name="search">
+    <div class="navbar">
+        <a href="index.html"><button>Home</button></a>
+        <label for="search">
+            <input type="text" name="search" placeholder="Search for cryptocurrencies">
+        </label>
         <button id="search">Search</button>
-    </label>
-
-    <h1>Popular Currencies</h1>
+    </div>
 
     <div class="search-parameters">
 
@@ -38,8 +38,11 @@
 
     </div>
 
+    <div class="sub-heading">Popular Currencies</div>
+
+    <div id="pages"></div>
     <div id="result"></div>
-    
+
     <script type="text/javascript" src="script.js"></script>
     <script>
         window.addEventListener("load", showPopularCurrencies)
