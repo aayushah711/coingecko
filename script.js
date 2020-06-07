@@ -1,4 +1,11 @@
 var base_url = "https://api.coingecko.com/api/v3"
+var result = document.getElementById("result")
+
+result.addEventListener("click",function(){
+    if (event.target.parentNode.className === "card"){
+        location = "coin.html?coin=" + event.target.parentNode.id
+    }
+})
 
 function showPopularCurrencies(){
     console.log("searching popular currencies")
@@ -24,14 +31,13 @@ function showPopularCurrencies(){
     xhr.onload = function(){
         console.log(xhr.status)
         var data = JSON.parse(this.response);
-        renderDOM(data)
+        displayCoins(data)
     }
 }
 
-function renderDOM(data){
+function displayCoins(data){
     var arr = data
 
-    var result = document.getElementById("result")
     result.innerHTML = ""
 
     var pages = document.createElement("div")
@@ -52,9 +58,9 @@ function renderDOM(data){
     })
 
     function createCard(cryptocurrency){
-        console.log(cryptocurrency);
         var div = document.createElement("div");
         div.setAttribute("class","card");
+        div.setAttribute("id",cryptocurrency["id"])
         var img = document.createElement("img");
         img.setAttribute("src", cryptocurrency.image)
         var details = document.createElement("div");
@@ -75,21 +81,86 @@ function renderDOM(data){
             price.style.color = "red"
             priceChange.style.color = "red"
         }
-            
-
-        
-        
-
         div.append(img,details,price,priceChange);
         return div
 
     }
 }
 
+function coinPage(){
+    var searchValue = document.getElementsByTagName("input")[0].value || 0
+    location = "coin.html?coin=" + searchValue
+}
 
-// function searchCoin(){
-//     var searchValue = event.target.previousSibling.previousSibling.value
-//     console.log(searchValue)
-// }
-// var search = document.getElementById("search");
-// search.addEventListener("click", searchCoin)
+function searchCoin(){
+    console.log("Searching for coin...")
+
+    var query = new URLSearchParams(location.search)
+    var coin = query.get("coin")
+    if (coin === "0"){
+        coinUnavailable()
+    }
+    else{
+        var xhr = new XMLHttpRequest()
+        var params = new URLSearchParams()
+        params.append("vs_currency","usd")
+        params.append("ids", coin)
+    
+        xhr.open("GET",base_url+"/coins/markets?"+params)
+        xhr.setRequestHeader("accept","application/json")
+        xhr.send()
+        xhr.onload = function(){
+            var data = JSON.parse(xhr.response)[0];
+            if (data === undefined){
+                coinUnavailable()
+            }
+            document.getElementById("coinResult").append(displayCoin(data))
+        }
+    }
+}
+
+function coinUnavailable(){
+    console.log("Coin not available! Please try again!")
+    h1 = document.createElement("h1")
+    h1.innerText = "Coin not available! Please try again..."
+    h1.setAttribute("class","sub-heading")
+    document.getElementById("coinResult").append(h1)
+}
+function displayCoin(data){
+    console.log(data)
+    var div = document.createElement("div");
+    div.setAttribute("class","table")
+    div.append(createDiv("ID"))
+    div.append(createDiv(data['id']))
+    div.append(createDiv("Symbol"))
+    div.append(createDiv(data['symbol']))
+    div.append(createDiv("Name"))
+    div.append(createDiv(data['name']))
+    div.append(createDiv("Current Price"))
+    div.append(createDiv(data['current_price']))
+    div.append(createDiv("Market Cap"))
+    div.append(createDiv(data['market_cap']))
+    div.append(createDiv("Market Cap Rank"))
+    div.append(createDiv(data['market_cap_rank']))
+    div.append(createDiv("Volume"))
+    div.append(createDiv(data['total_volume']))
+    div.append(createDiv("24 hr High"))
+    div.append(createDiv(data['high_24h']))
+    div.append(createDiv("24 hr Low"))
+    div.append(createDiv(data['low_24h']))
+    div.append(createDiv("Price Change in last 24 hrs ($)"))
+    div.append(createDiv(data['price_change_24h']))
+    div.append(createDiv("Price Change in last 24 hrs (%)"))
+    div.append(createDiv(data['price_change_percentage_24h']))
+    div.append(createDiv("All time High"))
+    div.append(createDiv(data['ath']))
+    div.append(createDiv("All time Low"))
+    div.append(createDiv(data['atl']))
+    return div
+}
+function createDiv(str){
+    var div = document.createElement("div")
+    div.innerText = str
+    div.setAttribute("class","boxDetails")
+    return div
+}

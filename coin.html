@@ -2,23 +2,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CoinGecko</title>
+    <title>Coin</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="navbar">
         <a href="index.html"><button>Home</button></a>
         <label for="search">
-            <input type="text" name="search" placeholder="Search for cryptocurrencies" required>
+            <input type="text" name="search" placeholder="Search for cryptocurrencies">
         </label>
         <button onclick="coinPage()">Search</button>
     </div>
 
-    <div class="homepage-heading">
-        Look for information on your favourite cryptocurrency <br>
-        <a href="popularCurrencies.html"><button id="btn-get-started">Get started</button></a>
-    </div>
-
+    <div id="coinResult"></div>
     <script type="text/javascript" src="script.js"></script>
+    <script>
+        window.addEventListener("load", searchCoin)
+    </script>
+    
 </body>
 </html>
